@@ -1,37 +1,37 @@
-package ability
+package policy
 
 type Rule struct {
 	Action  string
 	Subject string
 }
 
-type Ability struct {
+type Policy struct {
 	allow []*Rule
 	deny  []*Rule
 }
 
-func NewAbility() *Ability {
-	return &Ability{
+func NewPolicy() *Policy {
+	return &Policy{
 		allow: []*Rule{},
 		deny:  []*Rule{},
 	}
 }
 
-func (a *Ability) Can(action string, subject string) {
+func (a *Policy) Can(action string, subject string) {
 	a.allow = append(a.allow, &Rule{
 		Action:  action,
 		Subject: subject,
 	})
 }
 
-func (a *Ability) Cannot(action string, subject string) {
+func (a *Policy) Cannot(action string, subject string) {
 	a.deny = append(a.deny, &Rule{
 		Action:  action,
 		Subject: subject,
 	})
 }
 
-func (a *Ability) Check(action string, subject string) (allow bool) {
+func (a *Policy) Check(action string, subject string) (allow bool) {
 	allow = false
 
 	// Check for rules that allow the given action on the given subject

@@ -1,4 +1,4 @@
-package ability
+package policy
 
 import (
 	"testing"
@@ -6,11 +6,11 @@ import (
 
 type User struct {
 	IsAdmin bool
-	ID int
+	ID      int
 }
 
-func defineAbility(user User) (a *Ability) {
-	a = NewAbility()
+func definePolicy(user User) (a *Policy) {
+	a = NewPolicy()
 
 	if user.IsAdmin {
 		a.Can("create", "User")
@@ -24,14 +24,14 @@ func defineAbility(user User) (a *Ability) {
 }
 
 func TestAbs(t *testing.T) {
-	newAbility := NewAbility()
-	newAbility.Can("read", "User")
+	newPolicy := NewPolicy()
+	newPolicy.Can("read", "User")
 
-	if res := newAbility.Check("read", "User"); res != true {
+	if res := newPolicy.Check("read", "User"); res != true {
 		t.Errorf("Check(read, User) returned %v when it was expected to return true", res)
 	}
 
-	if res := newAbility.Check("update", "User"); res != false {
+	if res := newPolicy.Check("update", "User"); res != false {
 		t.Errorf("Check(update, User) returned %v when it was expected to return false", res)
 	}
 
@@ -45,40 +45,40 @@ func TestAbs(t *testing.T) {
 		ID:      1,
 	}
 
-	adminAbility := defineAbility(adminUser)
-	regularAbility := defineAbility(regularUser)
+	adminPolicy := definePolicy(adminUser)
+	regularPolicy := definePolicy(regularUser)
 
-	if res := adminAbility.Check("read", "User"); res != true {
+	if res := adminPolicy.Check("read", "User"); res != true {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
-	if res := regularAbility.Check("read", "User"); res != true {
+	if res := regularPolicy.Check("read", "User"); res != true {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
-	if res := adminAbility.Check("update", "User"); res != true {
+	if res := adminPolicy.Check("update", "User"); res != true {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
-	if res := adminAbility.Check("create", "User"); res != true {
+	if res := adminPolicy.Check("create", "User"); res != true {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
-	if res := adminAbility.Check("delete", "User"); res != true {
+	if res := adminPolicy.Check("delete", "User"); res != true {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
 	// ------
 
-	if res := regularAbility.Check("update", "User"); res != false {
+	if res := regularPolicy.Check("update", "User"); res != false {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
-	if res := regularAbility.Check("create", "User"); res != false {
+	if res := regularPolicy.Check("create", "User"); res != false {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
-	if res := regularAbility.Check("delete", "User"); res != false {
+	if res := regularPolicy.Check("delete", "User"); res != false {
 		t.Errorf("Check(update, User) returned %v when it was expected to return true", res)
 	}
 
